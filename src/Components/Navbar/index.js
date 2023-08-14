@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { adminNavOptions, navOptions } from "@/app/Constants";
 import { usePathname, useRouter } from "next/navigation";
+import { useSelector, useDispatch } from 'react-redux';
+import { logout, login } from '@/app/redux/features/authSlice';
 
 function NavItems({router}) {
   return (
@@ -24,7 +26,8 @@ function NavItems({router}) {
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
-  const isAuthenticated = false;
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+  const dispatch = useDispatch()
   const isAdmin = true;
 
   return (
@@ -50,15 +53,15 @@ export default function Navbar() {
           {isAuthenticated && (
               <button
                 className={`flex items-center px-3 py-2 border rounded text-black border-white hover:text-black hover:border-white`}
-                onClick={() => router.push("/account")}
+                onClick={() => {dispatch(logout());router.push("/")}}
               >
-                Account
+                Logout
               </button>
           )}
           {!isAuthenticated && (
             <button
               className={`flex items-center px-3 py-2 border rounded text-black border-white hover:text-black hover:border-white`}
-              onClick={() => router.push("/cart")}
+              onClick={() => {dispatch(login());router.push("/")}}
             >
               Login
             </button>
